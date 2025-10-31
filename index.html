@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tamil Radios V2</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { margin:0; background:#0c0f1e; color:#fff; font-family:sans-serif; }
+    h1 { text-align:center; padding:1rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1rem; padding:1rem; }
+    .card { background:#13182f; border-radius:12px; padding:1rem; cursor:pointer; transition:0.3s; text-align:center; }
+    .card:hover { transform:scale(1.05); background:#1c2244; }
+    img { width:100%; border-radius:8px; }
+    .player { position:fixed; bottom:0; left:0; right:0; background:#13182f; padding:.8rem; display:flex; justify-content:center; }
+    button { padding:0.5rem 1rem; border:none; border-radius:8px; }
+  </style>
+</head>
+<body>
+  <h1>Tamil Radios V2</h1>
+  <div class="grid" id="stationGrid"></div>
+  <div class="player">
+    <button id="playBtn">▶ Play</button>
+  </div>
+<script>
+const stations = [
+ {name:"Hello FM",url:"https://listen.openstream.co/4428/audio",logo:"assets/hellofm.png"},
+ {name:"Radio Mirchi",url:"https://listen.openstream.co/4543/audio",logo:"assets/radiomirchi.png"},
+ {name:"Suryan FM",url:"https://listen.openstream.co/6714/audio",logo:"assets/suryanfm.png"},
+ {name:"Radio City",url:"https://listen.openstream.co/4426/audio",logo:"assets/radiocity.png"},
+ {name:"Aha FM",url:"https://radio.theanetworks.com.lk:8000/ahafm.mp3",logo:"assets/ahafm.png"},
+ {name:"Big FM",url:"https://radios.crabdance.com:8002/4",logo:"assets/bigfmtamil.png"},
+];
+let audio = new Audio();
+let current = null;
+const grid = document.getElementById('stationGrid');
+stations.forEach((s,i)=>{
+  let div=document.createElement('div');
+  div.className="card";
+  div.innerHTML=`<img src="${s.logo}" /><p>${s.name}</p>`;
+  div.onclick=()=>{ current = s; audio.src=s.url; audio.play(); };
+  grid.appendChild(div);
+});
+document.getElementById('playBtn').onclick=()=>{ if(current) audio.paused?audio.play():audio.pause(); };
+if('mediaSession' in navigator){
+  navigator.mediaSession.metadata = new MediaMetadata({ title:'Tamil Radios'});
+}
+</script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+</script>
+</body>
+</html>
